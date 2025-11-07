@@ -1,0 +1,20 @@
+{
+  "Wedding": [
+    "Image/Wedding1.jpg",
+    "Image/Wedding2.jpg",
+    "Image/Wedding3.jpg"
+  ],
+  "Maternity": [
+    "Image/Maternity1.jpg",
+    "Image/Maternity2.jpg"
+  ],
+  "Portrait": [
+    "Image/Portrait1.jpg",
+    "Image/Portrait2.jpg",
+    "Image/Portrait3.jpg"
+  ],
+  "Commercial": [
+    "Image/Commercial1.jpg",
+    "Image/Commercial2.jpg"
+  ]
+}

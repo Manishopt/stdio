@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <title>TJ Clicks Studio | Professional Photography in Jaipur</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="Image/favicon.png">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1042/1042390.png">
     
     <!-- External Libraries -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
@@ -25,7 +25,7 @@
         }
 
         :root {
-            --primary-color: #ffb6c1; /* changed from golden to pink */
+            --primary-color: #ffb6c1; /* pink */
             --secondary-color: #334155;
             --accent-color: #0891B2;
             --dark-bg: #1a1a1a;
@@ -34,6 +34,95 @@
             --text-light: #fff;
             --shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             --transition: all 0.3s ease;
+            --gradient: linear-gradient(135deg, #ffb6c1 0%, #0891B2 100%);
+            --card-bg: #ffffff;
+        }
+
+        /* Dark theme variables */
+        [data-theme="dark"] {
+            --primary-color: #ffb6c1;
+            --secondary-color: #e2e8f0;
+            --accent-color: #06b6d4;
+            --dark-bg: #0f172a;
+            --light-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --text-light: #ffffff;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            --card-bg: #1e293b;
+            
+            /* Improve text rendering in dark mode */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            
+            /* Fix text colors in dark mode */
+            color: var(--text-dark);
+        }
+        
+        /* Blog section styles */
+        .blog-section {
+            background-color: var(--card-bg);
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin: 60px auto;
+            max-width: 1200px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        
+        .blog-post {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            margin: 20px auto;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .blog-post:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .blog-post h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .blog-post:hover h3 {
+            color: var(--accent-color);
+        }
+        
+        .blog-post p {
+            color: var(--text-dark);
+            line-height: 1.7;
+            margin: 0;
+        }
+        
+        /* Fix text colors in specific sections */
+        [data-theme="dark"] .portfolio-grid figcaption,
+        [data-theme="dark"] .blog-post,
+        [data-theme="dark"] .blog-post h3,
+        [data-theme="dark"] .blog-post p,
+        [data-theme="dark"] .testimonial-text,
+        [data-theme="dark"] .service-card p,
+        [data-theme="dark"] .about-content p {
+            color: var(--text-dark) !important;
+        }
+        
+        /* Ensure links are visible in dark mode */
+        [data-theme="dark"] a:not(.btn) {
+            color: var(--accent-color);
+        }
+        
+        [data-theme="dark"] a:hover:not(.btn) {
+            color: var(--primary-color);
         }
 
         html {
@@ -51,6 +140,10 @@
             width: 100vw;
             max-width: 100%;
             box-sizing: border-box;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         .container {
@@ -92,14 +185,14 @@
         .cursor-dot {
             width: 8px;
             height: 8px;
-            background-color: var(--accent-color);
+            background-color: var(--primary-color);
             transform: translate(-50%, -50%);
         }
 
         .cursor-outline {
             width: 30px;
             height: 30px;
-            border: 2px solid var(--accent-color);
+            border: 2px solid var(--primary-color);
             transform: translate(-50%, -50%);
             transition: top 0.15s ease, left 0.15s ease;
         }
@@ -174,7 +267,7 @@
 
         /* ===== HERO SECTION ===== */
         header {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Image/WHITE.jpg');
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -186,6 +279,10 @@
             color: var(--text-light);
             text-align: center;
             position: relative;
+        }
+        
+        [data-theme="dark"] header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('Image/WHITE.jpg');
         }
 
         header h1 {
@@ -222,71 +319,60 @@
 
         /* ===== SECTIONS ===== */
         section {
-            background-color: rgba(255, 255, 255, 0.95);
-            margin: 60px 10px; /* Adjusted side margins */
-            padding: 60px 20px; /* Adjusted side padding */
-            width: min(100% - 20px, 1200px);
-            margin-inline: auto;
-            box-sizing: border-box;
-            border-radius: 20px;
+            background-color: var(--card-bg);
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 60px 20px;
+            border-radius: 10px;
             box-shadow: var(--shadow);
-            animation: fadeIn 0.8s ease;
+            margin-bottom: 30px;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
         }
 
         section h2 {
-            color: var(--text-dark);
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 30px;
+            color: var(--primary-color);
+            text-align: center;
+            position: relative;
             padding-bottom: 15px;
-            border-bottom: 3px solid var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        /* ===== PORTFOLIO GALLERY ===== */
+        section p {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* ===== PORTFOLIO GRID ===== */
         .portfolio-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
         }
-
-        figure {
-            position: relative;
-            text-align: center;
+        
+        .portfolio-grid figure {
+            background: var(--card-bg);
+            border-radius: 8px;
             overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
         }
-
-        figure:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        
+        .portfolio-grid figure:hover {
+            transform: translateY(-5px);
         }
-
-        figure img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            display: block;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        figure:hover img {
-            transform: scale(1.1);
-        }
-
-        figcaption {
+        
+        .portfolio-grid figcaption {
             padding: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            text-align: center;
             color: var(--text-dark);
-            background: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
         }
 
         /* ===== SERVICES LIST ===== */
@@ -328,20 +414,31 @@
         /* ===== TESTIMONIALS ===== */
         blockquote {
             font-style: italic;
-            color: #555;
+            color: var(--text-dark);
             border-left: 4px solid var(--primary-color);
-            padding: 20px 25px;
-            margin: 20px 0;
-            background: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
+            padding: 25px;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] blockquote {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--accent-color);
         }
 
         blockquote:hover {
-            background: #fff;
-            transform: translateX(10px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+            box-shadow: none;
+        }
+        
+        blockquote strong {
+            color: var(--primary-color);
+            display: block;
+            margin-top: 10px;
+            font-style: normal;
         }
 
         /* ===== ABOUT SECTION ===== */
@@ -505,26 +602,44 @@
             background: #e599b0; /* darker pink on hover */
         }
 
-        /* ===== CONTACT INFO ===== */
-        .contact-info {
-            margin-top: 30px;
-        }
-
-        .contact-info p {
-            font-size: 1.1rem;
-            margin: 15px 0;
-        }
-
-        .contact-info a {
-            color: var(--primary-color);
+        /* Index-only "Get In Touch" button (anchor styled as button) */
+        .contact-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 8px;
             text-decoration: none;
+            font-size: 1.1rem;
             font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255,182,193,0.3);
             transition: var(--transition);
         }
 
-        .contact-info a:hover {
-            color: var(--accent-color);
-            text-decoration: underline;
+        .contact-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,182,193,0.4);
+            background: #e599b0;
+        }
+
+        /* ===== STYLES FOR SPECIFIC PAGES ===== */
+        /* Hide the contact form on the index page where the button is used */
+        body.index-page .contact-form {
+            display: none;
+        }
+
+        /* Show the contact form only on the contact.html page */
+        body.contact-page .contact-form {
+            display: block;
+        }
+
+        /* Hide the "Get In Touch" button on the contact.html page */
+        body.contact-page .contact-button {
+            display: none;
         }
 
         /* ===== MODAL ===== */
@@ -603,6 +718,68 @@
 
         footer i {
             margin-right: 8px;
+        }
+
+        /* ===== THEME TOGGLE BUTTON ===== */
+        .theme-toggle, .nav-theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002; /* Ensure it's above other elements */
+        }
+        
+        /* Mobile theme toggle button */
+        /* Navigation controls container */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* Theme toggle in navigation */
+        .nav-theme-toggle {
+            margin-left: 0;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        /* Navigation-specific theme toggle */
+        .nav-theme-toggle {
+            margin-left: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-theme-toggle {
+                margin: 15px 0 0 0;
+                background: rgba(255, 255, 255, 0.1);
+                width: 40px;
+                height: 40px;
+            }
         }
 
         /* ===== FLOATING BUTTONS ===== */
@@ -734,6 +911,17 @@
             .menu-toggle {
                 display: flex;
             }
+            
+            /* Adjust nav controls on mobile */
+            .nav-controls {
+                gap: 10px;
+            }
+            
+            .nav-theme-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
 
             .nav-links {
                 position: fixed;
@@ -756,11 +944,22 @@
                 right: 0;
             }
 
-            .nav-links a {
+            .nav-links a, .nav-links button {
                 font-size: 1.2rem;
                 width: 100%;
                 text-align: center;
                 padding: 15px;
+                text-decoration: none;
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--text-light);
+            }
+
+            .nav-links .theme-toggle {
+                margin: 15px auto 0;
+                display: flex;
+                justify-content: center;
             }
 
             header {
@@ -959,25 +1158,32 @@
         }
     </style>
 </head>
-<body>
+<body class="index-page">
     <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- Background Video -->
+    <!-- Background Video (commented out until video is available) -->
+    <!--
     <video autoplay muted loop playsinline id="bg-video">
-        <source src="Image/shadi.mp4" type="video/mp4">
+        <source src="videos/background.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
+    -->
     <div id="video-overlay"></div>
 
     <!-- Navigation -->
     <nav>
         <div class="nav-logo">TJ Clicks</div>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="nav-controls">
+            <button class="theme-toggle nav-theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
         <div class="nav-links" id="navLinks">
             <a href="#portfolio">Portfolio</a>
@@ -1000,75 +1206,54 @@
         
         <div class="portfolio-grid">
             <figure>
-                <img src="Image/Wedding.jpg" alt="Wedding Photography" onclick="openModal('modalWedding')">
+                <img src="Image/Wedding.jpg" alt="Wedding Photography" onclick="openGallery('Wedding')">
                 <figcaption>Wedding Photography</figcaption>
             </figure>
 
             <figure>
-                <img src="Image/Maternity.jpg" alt="Maternity Photography" onclick="openModal('modalMaternity')">
+                <img src="Image/Maternity.jpg" alt="Maternity Photography" onclick="openGallery('Maternity')">
                 <figcaption>Maternity Photography</figcaption>
             </figure>
 
             <figure>
-                <img src="Image/Portrait.jpg" alt="Portrait Photography" onclick="openModal('modalPortrait')">
+                <img src="Image/Portrait.jpg" alt="Portrait Photography" onclick="openGallery('Portrait')">
                 <figcaption>Portrait Photography</figcaption>
             </figure>
 
             <figure>
-                <img src="Image/Commercial-Photoshoot.jpg" alt="Commercial Photography" onclick="openModal('modalCommercial')">
+                <img src="Image/Commercial-Photoshoot.jpg" alt="Commercial Photography" onclick="openGallery('Commercial')">
                 <figcaption>Commercial Photography</figcaption>
             </figure>
         </div>
     </section>
-
-    <!-- Modals -->
-    <div id="modalWedding" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalWedding')">&times;</span>
-            <h2>Wedding Photography</h2>
-            <p>This wedding shoot captured the love and joy of a beautiful couple in Jaipur. Golden light, candid smiles, and traditional attire made it unforgettable. Every moment tells a story of romance and celebration.</p>
+ 
+    <!-- Dynamic Gallery Modal (single) -->
+    <div id="dynamicGalleryModal" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="galleryTitle">
+            <button class="close" onclick="closeDynamicGallery()" aria-label="Close gallery">&times;</button>
+            <h2 id="galleryTitle" class="modal-title">Gallery</h2>
+            <div class="gallery-grid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding-top:10px;"></div>
+            <div style="text-align:center;margin-top:12px;">
+                <a id="openFullGallery" href="#" style="color:var(--accent-color);font-weight:600;">Open full gallery</a>
+            </div>
         </div>
     </div>
-
-    <div id="modalMaternity" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalMaternity')">&times;</span>
-            <h2>Maternity Photography</h2>
-            <p>Celebrating the beauty of motherhood with elegant and intimate maternity portraits. Capturing the anticipation, love, and wonder of expecting parents in stunning natural settings.</p>
-        </div>
-    </div>
-
-    <div id="modalPortrait" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalPortrait')">&times;</span>
-            <h2>Portrait Photography</h2>
-            <p>Professional portrait sessions that reveal personality and character. From urban backdrops to intimate settings, each portrait is crafted to showcase your unique story.</p>
-        </div>
-    </div>
-
-    <div id="modalCommercial" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('modalCommercial')">&times;</span>
-            <h2>Commercial Photography</h2>
-            <p>High-end commercial photography showcasing products, brands, and businesses. From luxury automotive to corporate branding, we deliver stunning visuals that elevate your business.</p>
-        </div>
-    </div>
-
-    <!-- Services -->
-    <section id="services">
-        <h2>Our Services</h2>
-        <p>We offer a comprehensive range of professional photography services tailored to your needs.</p>
-        <ul class="services-list">
-            <li><i class="fas fa-camera"></i> Pre-Wedding Shoots</li>
-            <li><i class="fas fa-heart"></i> Wedding Photography</li>
-            <li><i class="fas fa-baby"></i> Newborn Baby Photography</li>
-            <li><i class="fas fa-user"></i> Portrait Sessions</li>
-            <li><i class="fas fa-users"></i> Couple Photoshoots</li>
-            <li><i class="fas fa-calendar"></i> Event Coverage</li>
-            <li><i class="fas fa-briefcase"></i> Commercial & Product Photography</li>
-        </ul>
-    </section>
-
+ 
+     <!-- Services -->
+     <section id="services">
+         <h2>Our Services</h2>
+         <p>We offer a comprehensive range of professional photography services tailored to your needs.</p>
+         <ul class="services-list">
+             <li><i class="fas fa-camera"></i> Pre-Wedding Shoots</li>
+             <li><i class="fas fa-heart"></i> Wedding Photography</li>
+             <li><i class="fas fa-baby"></i> Newborn Baby Photography</li>
+             <li><i class="fas fa-user"></i> Portrait Sessions</li>
+             <li><i class="fas fa-users"></i> Couple Photoshoots</li>
+             <li><i class="fas fa-calendar"></i> Event Coverage</li>
+             <li><i class="fas fa-briefcase"></i> Commercial & Product Photography</li>
+         </ul>
+     </section>
+ 
     <!-- Testimonials -->
     <section>
         <h2>Client Testimonials</h2>
@@ -1111,13 +1296,13 @@
     </section>
 
     <!-- Blog -->
-    <section>
+    <section class="blog-section">
         <h2>Photography Blog</h2>
-        <article>
+        <article class="blog-post">
             <h3>The Magic of Golden Hour</h3>
             <p>Golden hour light creates the most flattering tones and shadows. Here's how to make the most of it...</p>
         </article>
-        <article>
+        <article class="blog-post">
             <h3>Choosing the Right Lens</h3>
             <p>Wide-angle or prime? Here's a quick guide to lenses for beginners and pros alike.</p>
         </article>
@@ -1149,28 +1334,19 @@
         <h2>Get In Touch</h2>
         <p>Ready to capture your special moments? Fill out the form below or reach out directly.</p>
         
-        <form class="contact-form" action="submit_form.php" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required placeholder="Your Name">
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="your.email@example.com">
-
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="10-digit phone number">
-
-            <label for="topic">Subject:</label>
-            <input type="text" id="topic" name="topic" required placeholder="What can we help you with?">
-
-            <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
-        </form>
-
-        <div class="contact-info">
-            <p><i class="fas fa-envelope"></i> Email: <a href="mailto:tjclickstudio@gmail.com">tjclickstudio@gmail.com</a></p>
-            <p><i class="fas fa-phone"></i> Phone: <a href="tel:+919460657127">+91 9460657127</a></p>
-            <p><i class="fab fa-instagram"></i> Instagram: <a href="https://www.instagram.com/Insight_Frame___" target="_blank" rel="noopener noreferrer">@Insight_Frame___</a></p>
+        <!-- Replaced full form with single Get In Touch button that navigates to contact.html -->
+        <div class="contact-form" aria-hidden="false">
+            <a href="contact.html" class="contact-button" role="button" aria-label="Get In Touch">
+                <i class="fas fa-envelope"></i> Get In Touch
+            </a>
         </div>
-    </section>
+ 
+         <div class="contact-info">
+             <p><i class="fas fa-envelope"></i> Email: <a href="mailto:tjclickstudio@gmail.com">tjclickstudio@gmail.com</a></p>
+             <p><i class="fas fa-phone"></i> Phone: <a href="tel:+919460657127">+91 9460657127</a></p>
+             <p><i class="fab fa-instagram"></i> Instagram: <a href="https://www.instagram.com/Insight_Frame___" target="_blank" rel="noopener noreferrer">@Insight_Frame___</a></p>
+         </div>
+     </section>
 
     <!-- Footer -->
     <footer>
@@ -1198,141 +1374,293 @@
 
     <!-- External Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <script>
+        // Initialize lightbox with options
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'alwaysShowNavOnTouchDevices': true,
+            'disableScrolling': true,
+            'positionFromTop': 100
+        });
+    </script>
 
     <!-- Custom Scripts -->
     <script>
+        // Dynamic gallery: show placeholder images in the modal
+        async function openGallery(category) {
+            try {
+                // Use placeholder images for demo purposes
+                const placeholderImages = [
+                    'https://source.unsplash.com/random/800x600?photography',
+                    'https://source.unsplash.com/random/800x600?portrait',
+                    'https://source.unsplash.com/random/800x600?wedding',
+                    'https://source.unsplash.com/random/800x600?maternity',
+                    'https://source.unsplash.com/random/800x600?couple',
+                    'https://source.unsplash.com/random/800x600?bride',
+                    'https://source.unsplash.com/random/800x600?groom',
+                    'https://source.unsplash.com/random/800x600?ceremony'
+                ];
+                
+                const modal = document.getElementById('dynamicGalleryModal');
+                if (!modal) {
+                    console.error('Modal element not found');
+                    return;
+                }
+                
+                const grid = modal.querySelector('.gallery-grid');
+                if (!grid) {
+                    console.error('Gallery grid not found');
+                    return;
+                }
+                
+                const titleElement = modal.querySelector('.modal-title');
+                if (titleElement) {
+                    titleElement.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                }
+                
+                const fullGalleryLink = document.getElementById('openFullGallery');
+                if (fullGalleryLink) {
+                    fullGalleryLink.href = `gallery.html?category=${encodeURIComponent(category)}`;
+                }
+                
+                grid.innerHTML = '';
+
+                placeholderImages.forEach((src, index) => {
+                    const a = document.createElement('a');
+                    a.href = src;
+                    a.setAttribute('data-lightbox', category);
+                    a.style.display = 'inline-block';
+                    a.style.margin = '5px';
+                    
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `${category} ${index + 1}`;
+                    img.loading = 'lazy';
+                    img.style.width = '200px';
+                    img.style.height = '130px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    img.style.boxShadow = '0 4px 14px rgba(0,0,0,0.15)';
+                    img.style.transition = 'transform 0.3s ease';
+                    
+                    // Add hover effect
+                    img.addEventListener('mouseover', () => {
+                        img.style.transform = 'scale(1.05)';
+                    });
+                    
+                    img.addEventListener('mouseout', () => {
+                        img.style.transform = 'scale(1)';
+                    });
+                    
+                    a.appendChild(img);
+                    grid.appendChild(a);
+                });
+
+                modal.style.display = 'block';
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            } catch (err) {
+                console.error('Failed to load gallery manifest', err);
+                window.location.href = `gallery.html?category=${encodeURIComponent(category)}`;
+            }
+        }
+
+        function closeDynamicGallery() {
+            const modal = document.getElementById('dynamicGalleryModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
         // Custom Cursor
         const cursorDot = document.querySelector(".cursor-dot");
         const cursorOutline = document.querySelector(".cursor-outline");
 
-        window.addEventListener("mousemove", (e) => {
-            const { clientX, clientY } = e;
+        if (cursorDot && cursorOutline) {
+            window.addEventListener("mousemove", (e) => {
+                const { clientX, clientY } = e;
 
-            cursorDot.style.left = `${clientX}px`;
-            cursorDot.style.top = `${clientY}px`;
+                cursorDot.style.left = `${clientX}px`;
+                cursorDot.style.top = `${clientY}px`;
 
-            setTimeout(() => {
-                cursorOutline.style.left = `${clientX}px`;
-                cursorOutline.style.top = `${clientY}px`;
-            }, 100);
-        });
-
-        // Modal Functions
-        function openModal(id) {
-            document.getElementById(id).style.display = "block";
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = "none";
-            document.body.style.overflow = "auto";
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                    document.body.style.overflow = "auto";
-                }
+                setTimeout(() => {
+                    cursorOutline.style.left = `${clientX}px`;
+                    cursorOutline.style.top = `${clientY}px`;
+                }, 100);
             });
         }
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modals = document.querySelectorAll('.modal');
-                modals.forEach(modal => {
-                    modal.style.display = "none";
-                });
-                document.body.style.overflow = "auto";
-            }
-        });
-
-        // Music Player
+        // Audio Player
         const audio = document.getElementById('audio-player');
         const playPauseBtn = document.getElementById('playPauseBtn');
 
-        function togglePlayPause() {
-            if (audio.paused) {
-                audio.play();
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            } else {
-                audio.pause();
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        if (audio && playPauseBtn) {
+            function togglePlayPause() {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    audio.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                }
             }
+
+            playPauseBtn.addEventListener('click', togglePlayPause);
         }
 
         function forwardMusic() {
-            audio.currentTime += 10;
+            if (audio) audio.currentTime += 10;
         }
 
         function rewindMusic() {
-            audio.currentTime -= 10;
+            if (audio) audio.currentTime -= 10;
         }
+
+        // Theme management
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
+            
+            // Function to update theme icon
+            function updateThemeIcons(theme) {
+                const iconClass = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                if (themeIcon) themeIcon.className = iconClass;
+            }
+            
+            // Function to update theme and icon
+            function updateTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                if (themeIcon) {
+                    themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+            
+            // Initialize theme from localStorage or system preference
+            let savedTheme = localStorage.getItem('theme');
+            
+            if (!savedTheme) {
+                // If no saved theme, use system preference
+                savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                localStorage.setItem('theme', savedTheme);
+            }
+            
+            // Apply the saved theme
+            updateTheme(savedTheme);
+            
+            // Toggle theme on button click (both desktop and mobile)
+            function setupThemeToggle(button) {
+                if (!button) return;
+                
+                button.addEventListener('click', function() {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    updateTheme(newTheme);
+                });
+            }
+            
+            // Set up theme toggle
+            setupThemeToggle(themeToggle);
+            
+            // Listen for system theme changes (only if user hasn't set a preference)
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    updateTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        });
 
         // Background Video Sound Toggle
         const video = document.getElementById("bg-video");
         const toggleBtn = document.getElementById("toggle-sound");
 
-        toggleBtn.addEventListener("click", function() {
-            video.muted = !video.muted;
-            toggleBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-        });
-
-        // Mobile Menu Toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        menuToggle.addEventListener('click', function() {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function() {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
+        if (video && toggleBtn) {
+            toggleBtn.addEventListener("click", function() {
+                video.muted = !video.muted;
+                toggleBtn.innerHTML = video.muted ? 
+                    '<i class="fas fa-volume-mute"></i>' : 
+                    '<i class="fas fa-volume-up"></i>';
             });
-        });
+        }
 
-        // Smooth Scroll for Navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById("scroll-top-btn");
+        if (scrollTopBtn) {
+            scrollTopBtn.addEventListener("click", function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
+        }
+
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            if (scrollTopBtn) {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.style.display = 'flex';
+                } else {
+                    scrollTopBtn.style.display = 'none';
+                }
+            }
         });
 
-        // Add scroll animation to sections
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+         // Mobile Menu Toggle
+         const menuToggle = document.getElementById('menuToggle');
+         const navLinks = document.getElementById('navLinks');
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+         menuToggle.addEventListener('click', function() {
+             menuToggle.classList.toggle('active');
+             navLinks.classList.toggle('active');
+         });
 
-        document.querySelectorAll('section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(section);
-        });
+         // Close menu when clicking on a link
+         document.querySelectorAll('.nav-links a').forEach(link => {
+             link.addEventListener('click', function() {
+                 menuToggle.classList.remove('active');
+                 navLinks.classList.remove('active');
+             });
+         });
+
+         // Smooth Scroll for Navigation
+         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+             anchor.addEventListener('click', function (e) {
+                 e.preventDefault();
+                 const target = document.querySelector(this.getAttribute('href'));
+                 if (target) {
+                     target.scrollIntoView({
+                         behavior: 'smooth',
+                         block: 'start'
+                     });
+                 }
+             });
+         });
+
+         // Add scroll animation to sections
+         const observerOptions = {
+             threshold: 0.1,
+             rootMargin: '0px 0px -100px 0px'
+         };
+
+         const observer = new IntersectionObserver(function(entries) {
+             entries.forEach(entry => {
+                 if (entry.isIntersecting) {
+                     entry.target.style.opacity = '1';
+                     entry.target.style.transform = 'translateY(0)';
+                 }
+             });
+         }, observerOptions);
+
+         document.querySelectorAll('section').forEach(section => {
+             section.style.opacity = '0';
+             section.style.transform = 'translateY(20px)';
+             section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+             observer.observe(section);
+         });
     </script>
 </body>
 </html>

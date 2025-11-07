@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Contact TJ Clicks Studio - Professional Photography Services in Jaipur">
+    <meta name="author" content="Tejender Kaur">
     <title>Contact Us | TJ Clicks Studio</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="Image/favicon.png">
     
-    <!-- Font Awesome -->
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    
     <style>
+        /* ===== GLOBAL RESET & BASE STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -23,43 +24,67 @@
         }
 
         :root {
-            --primary: #ffb6c1; /* pink */
-            --secondary: #2C3E50;
-            --accent: #0891B2;
-            --light: #F8F9FA;
-            --dark: #1a1a1a;
-            --white: #ffffff;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --gradient: linear-gradient(135deg, #ffb6c1 0%, #0891B2 100%); /* pink start */
+            --primary-color: #ffb6c1; /* pink */
+            --secondary-color: #334155;
+            --accent-color: #0891B2;
+            --dark-bg: #1a1a1a;
+            --light-bg: #f8f9fa;
+            --text-dark: #2d3748;
+            --text-light: #fff;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+            --gradient: linear-gradient(135deg, #ffb6c1 0%, #0891B2 100%);
+            --card-bg: #ffffff;
         }
 
-        html, body {
+        /* Dark theme variables */
+        [data-theme="dark"] {
+            --primary-color: #ffb6c1;
+            --secondary-color: #cbd5e1;
+            --accent-color: #06b6d4;
+            --dark-bg: #0f172a;
+            --light-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --text-light: #e2e8f0;
+            --shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            --card-bg: #1e293b;
+        }
+
+        html {
+            scroll-behavior: smooth;
             overflow-x: hidden;
             width: 100%;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: var(--secondary);
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
             width: 100%;
+            transition: var(--transition);
         }
 
-        /* Navigation */
+        /* ===== NAVIGATION ===== */
         .navbar {
-            background: var(--white);
-            padding: 20px 0;
-            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             padding: 0 30px;
             display: flex;
@@ -68,28 +93,61 @@
         }
 
         .nav-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--text-light);
             text-decoration: none;
-            transition: all 0.3s ease;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 8px rgba(255,182,193,0.3);
+            transition: var(--transition);
         }
 
         .nav-logo:hover {
             transform: scale(1.05);
+            color: var(--primary-color);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
         }
 
         .nav-back {
             background: var(--gradient);
-            color: var(--white);
-            padding: 8px 20px;
+            color: var(--text-light);
+            padding: 10px 25px;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255,182,193,0.3); /* pink shadow */
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255,182,193,0.3);
         }
 
         .nav-back:hover {
@@ -157,20 +215,21 @@
 
         /* Contact Cards */
         .contact-card {
-            background: var(--white);
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 40px;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             animation: fadeIn 0.6s ease;
             width: 100%;
             box-sizing: border-box;
             margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .contact-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         .contact-card h2 {
@@ -189,10 +248,11 @@
             gap: 20px;
             padding: 20px;
             margin: 15px 0;
-            background: var(--light);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border-left: 4px solid transparent;
+            backdrop-filter: blur(5px);
         }
 
         .contact-item:hover {
@@ -795,9 +855,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">TJ Clicks</a>
-            <a href="index.html" class="nav-back">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="index.html" class="nav-back">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -896,7 +961,7 @@
                     </div>
                     <div class="contact-details">
                         <h3>Quick Response</h3>
-                        <p>We typically respond within 2-4 hours during business hours</p>
+                        <p>We typically respond within 7-8 hours during business hours</p>
                     </div>
                 </div>
             </div>
@@ -919,8 +984,9 @@
                     </div>
                     <div class="location-text">
                         <h3>Studio Address</h3>
-                        <p>456 Jagatpura Lens Street<br>
-                           Near CBI Fathak<br>
+                        <p>Sahi Address<br>
+                           Varinda Garden, Near JNU College<br>
+                           Jagatpura<br>
                            Jaipur, Rajasthan 303505<br>
                            India</p>
                         <div class="action-buttons" style="margin-top: 15px;">
@@ -935,7 +1001,8 @@
             <!-- Contact Form -->
             <div class="form-card">
                 <h2>Send Us a Message</h2>
-                <form class="contact-form" action="submit_form.php" method="post">
+                <form class="contact-form" id="contactForm" action="https://formspree.io/f/mrbrzgaz" method="POST">
+                    <div id="formStatus" class="form-status" style="display: none; margin-bottom: 20px; padding: 10px; border-radius: 5px; text-align: center;"></div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Full Name *</label>
@@ -943,7 +1010,14 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="9876543210">
+                            <div style="display: flex; align-items: center; background: var(--light-bg); border-radius: 8px; border: 1px solid var(--primary-color);">
+                                <span style="padding: 0 12px; color: var(--text-dark);">+91</span>
+                                <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" 
+                                       placeholder="9876543210" maxlength="10" 
+                                       style="flex: 1; border: none; background: transparent; padding: 12px 12px 12px 0;"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            </div>
+                            <small style="display: block; margin-top: 5px; color: var(--text-dark); opacity: 0.7;">Enter 10-digit mobile number</small>
                         </div>
                     </div>
 
@@ -953,7 +1027,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="subject">Subject *</label>
+                        <label for="subject">Topic *</label>
                         <input type="text" id="subject" name="subject" required placeholder="Photography Service Inquiry">
                     </div>
 
@@ -990,9 +1064,120 @@
     </div>
 
     <script>
-        // Add smooth scroll animation
         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.contact-card, .map-card, .form-card, .social-card');
+            // Form submission handler
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const form = e.target;
+                    const status = document.getElementById('formStatus');
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalBtnText = submitBtn.innerHTML;
+                    
+                    // Phone validation
+                    const phone = document.getElementById('phone').value;
+                    if (phone.length !== 10) {
+                        alert('Please enter a valid 10-digit phone number');
+                        return false;
+                    }
+                    
+                    // Show loading state
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    if (status) status.style.display = 'none';
+                    
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            // Success
+                            if (status) {
+                                status.style.backgroundColor = '#d4edda';
+                                status.style.color = '#155724';
+                                status.style.border = '1px solid #c3e6cb';
+                                status.innerHTML = 'Thank you for your message! We will get back to you soon.';
+                                status.style.display = 'block';
+                            }
+                            form.reset();
+                        } else {
+                            throw new Error('Form submission failed');
+                        }
+                    } catch (error) {
+                        // Error
+                        if (status) {
+                            status.style.backgroundColor = '#f8d7da';
+                            status.style.color = '#721c24';
+                            status.style.border = '1px solid #f5c6cb';
+                            status.innerHTML = 'Oops! There was a problem sending your message. Please try again later or contact us directly at tjclickstudio@gmail.com';
+                            status.style.display = 'block';
+                        }
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                        
+                        // Scroll to status message if it exists
+                        if (status) {
+                            status.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                });
+            }
+
+            // Theme management
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                const themeIcon = themeToggle.querySelector('i');
+                
+                // Check for saved theme preference or use system preference
+                const savedTheme = localStorage.getItem('theme') || 
+                                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                
+                // Apply the saved theme
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                
+                // Update theme icon based on current theme
+                function updateThemeIcon(theme) {
+                    if (themeIcon) {
+                        themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                    }
+                }
+                
+                // Toggle theme function
+                function toggleTheme() {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    // Update theme
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    
+                    // Update icon
+                    updateThemeIcon(newTheme);
+                }
+                
+                // Initialize theme icon
+                updateThemeIcon(savedTheme);
+                
+                // Add click event to theme toggle
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+            
+            // Animation on scroll for cards
+            const cards = document.querySelectorAll('.card, .contact-card, .map-card, .form-card, .social-card');
+            
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+            });
             
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -1008,16 +1193,6 @@
             cards.forEach(card => {
                 observer.observe(card);
             });
-        });
-
-        // Form validation and submission
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            const phone = document.getElementById('phone').value;
-            if (phone.length !== 10) {
-                e.preventDefault();
-                alert('Please enter a valid 10-digit phone number');
-                return false;
-            }
         });
     </script>
 </body>
