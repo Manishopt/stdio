@@ -78,32 +78,31 @@
             top: 0;
             left: 0;
             right: 0;
-            background: transparent !important;
-            padding: 12px 15px;
+            background: transparent;
+            padding: 20px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
             transition: all 0.3s ease;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background-color: transparent !important;
-            height: 60px; /* Fixed height for consistency */
-            box-sizing: border-box;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: none;
         }
         
-        .navbar.scrolled {
-            background-color: rgba(0, 0, 0, 0.9) !important;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Ensure text is visible in both light and dark themes */
-        [data-theme="light"] .navbar {
-            --text-light: #f0f0f0; /* Light gray instead of pure white */
-        }
-        
+        /* Dark theme specific navbar styles */
         [data-theme="dark"] .navbar {
-            --text-light: #e6e6e6; /* Slightly darker gray for dark theme */
+            background: transparent;
+        }
+        
+        /* Navbar on scroll */
+        .navbar.scrolled {
+            background: transparent;
+            box-shadow: none;
+        }
+        
+        [data-theme="dark"] .navbar.scrolled {
+            background: transparent;
         }
 
         .nav-container {
@@ -169,17 +168,18 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.8rem;
             font-weight: 700;
-            color: #f0f0f0; /* Light gray instead of pure white */
-            text-decoration: none;
+            color: #ff8fa3; /* Pink color */
             letter-spacing: 3px;
             text-transform: uppercase;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+            text-shadow: 2px 2px 8px rgba(255, 143, 163, 0.3);
             transition: var(--transition);
+            text-decoration: none;
         }
 
         .nav-logo:hover {
             transform: scale(1.05);
-            color: var(--primary-color);
+            color: #ff6b8b; /* Slightly darker pink on hover */
+            text-shadow: 2px 2px 8px rgba(255, 143, 163, 0.5);
         }
 
         .nav-actions {
@@ -231,18 +231,35 @@
         /* Hero Section */
         .hero {
             position: relative;
-            padding: 100px 0 60px;
-            margin-top: 0;
+            background: url('images/image1.jpg') center/cover no-repeat;
+            background-color: #f0f0f0; /* Fallback color */
+            color: white;
             text-align: center;
-            color: var(--text-dark);
+            padding: 150px 20px 100px;
+            margin-bottom: 40px;
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
             z-index: 1;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,122.7C1248,107,1344,85,1392,74.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-            background-size: cover;
-            opacity: 1;
-            min-height: 200px; /* Ensure minimum height */
+            min-height: 400px;
             display: flex;
             align-items: center;
             justify-content: center;
+            isolation: isolate;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+            z-index: -1;
+        }
+        
+        [data-theme="dark"] .hero::before {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
         }
 
         .hero-content {
@@ -252,15 +269,20 @@
 
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 5px;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
             animation: fadeInDown 0.8s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .hero p {
-            font-size: 1rem;
+            font-size: 1.4rem;
             opacity: 0.95;
             animation: fadeInUp 0.8s ease 0.2s both;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
         /* Main Container */
@@ -665,11 +687,10 @@
 
         @media (max-width: 768px) {
             .navbar {
-                padding: 10px 15px !important;
+                padding: 15px 20px !important;
                 background: transparent !important;
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
-                background-color: transparent !important;
             }
             
             .hero {
@@ -804,7 +825,7 @@
 
         @media (max-width: 600px) {
             .navbar {
-                padding: 8px 10px !important;
+                padding: 12px 15px !important;
                 background: transparent !important;
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
