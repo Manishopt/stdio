@@ -403,35 +403,89 @@
         }
 
         .portfolio-placeholder {
+            position: relative;
+            width: 100%;
             height: 250px;
-            background: var(--card-bg);
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            overflow: hidden;
         }
-
-        .portfolio-placeholder:hover {
+        
+        .portfolio-item-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .portfolio-item-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .portfolio-overlay,
+        .view-more-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .portfolio-placeholder:hover .view-more-overlay,
+        .portfolio-item-container:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        
+        .portfolio-item-container:hover img {
             transform: scale(1.05);
-            border-color: var(--accent-color);
-            background: var(--card-item-bg);
         }
-
-        .portfolio-placeholder i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
+        
+        .view-more-btn {
+            color: white;
+            background: var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
         }
-
-        .portfolio-placeholder span {
-            color: var(--text-dark);
-            font-weight: 600;
-            text-align: center;
-            padding: 0 10px;
+        
+        .view-more-btn i {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .portfolio-placeholder:hover .view-more-btn,
+        .portfolio-item-container:hover .view-more-btn {
+            transform: translateY(0);
+        }
+        
+        .portfolio-placeholder .view-more-overlay {
+            opacity: 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .portfolio-placeholder:hover .view-more-overlay {
+            opacity: 1;
         }
 
         /* ===== SERVICES LIST ===== */
@@ -1596,14 +1650,24 @@
                     if (categoryThumbnail && categoryThumbnail.thumbnail_url) {
                         // Use uploaded thumbnail from admin panel
                         figure.innerHTML = `
-                            <img src="${categoryThumbnail.thumbnail_url}" alt="${category} Photography" onclick="openGallery('${category}')" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${category.toLowerCase()}/400/300.jpg';">
+                            <div class="portfolio-item-container" onclick="openGallery('${category}')">
+                                <img src="${categoryThumbnail.thumbnail_url}" alt="${category} Photography" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${category.toLowerCase()}/400/300.jpg';">
+                                <div class="portfolio-overlay">
+                                    <span class="view-more-btn">View More <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
                             <figcaption>${category} Photography</figcaption>
                         `;
                     } else if (categoryPhotos.length > 0) {
                         // Show first photo from category as thumbnail
                         const thumbnail = categoryPhotos[0];
                         figure.innerHTML = `
-                            <img src="${thumbnail.url}" alt="${category} Photography" onclick="openGallery('${category}')">
+                            <div class="portfolio-item-container" onclick="openGallery('${category}')">
+                                <img src="${thumbnail.url}" alt="${category} Photography">
+                                <div class="portfolio-overlay">
+                                    <span class="view-more-btn">View More <i class="fas fa-arrow-right"></i></span>
+                                </div>
+                            </div>
                             <figcaption>${category} Photography</figcaption>
                         `;
                     } else {
@@ -1612,6 +1676,9 @@
                             <div class="portfolio-placeholder" onclick="openGallery('${category}')">
                                 <i class="fas ${categoryIcons[category]}"></i>
                                 <span>${category} Photography</span>
+                                <div class="view-more-overlay">
+                                    <span class="view-more-btn">View More <i class="fas fa-arrow-right"></i></span>
+                                </div>
                             </div>
                             <figcaption>${category} Photography</figcaption>
                         `;
@@ -1873,13 +1940,13 @@
         const toggleBtn = document.getElementById("toggle-sound");
 
         if (video && toggleBtn) {
-            toggleBtn.addEventListener("click", function() {
-                video.muted = !video.muted;
+            toggleBtn.addEventListener("click", function() {                video.muted = !video.muted;
                 toggleBtn.innerHTML = video.muted ? 
                     '<i class="fas fa-volume-mute"></i>' : 
                     '<i class="fas fa-volume-up"></i>';
             });
         }
+        
 
         // Scroll to top button
         const scrollTopBtn = document.getElementById("scroll-top-btn");

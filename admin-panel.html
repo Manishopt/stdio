@@ -1563,23 +1563,22 @@
             console.log('🚀 Starting photo upload process...');
             const category = document.getElementById('photoCategory').value;
             const files = document.getElementById('photoUpload').files;
+            const photoAlert = document.getElementById('photoAlert');
+            const photoGrid = document.getElementById('photoGrid');
+            const fileListContainer = document.getElementById('fileListContainer');
+            const uploadButton = document.getElementById('uploadButton');
             
             console.log('📁 Upload details:', { category, fileCount: files.length });
             
             if (!category) {
-                alert('Please select a category first!');
+                showAlert('Please select a category first!', 'error', 'photoAlert');
                 return;
             }
             
             if (files.length === 0) {
-                alert('Please select photos to upload!');
+                showAlert('Please select photos to upload!', 'error', 'photoAlert');
                 return;
             }
-            
-            const photoGrid = document.getElementById('photoGrid');
-            const photoAlert = document.getElementById('photoAlert');
-            const fileListContainer = document.getElementById('fileListContainer');
-            const uploadButton = document.getElementById('uploadButton');
             
             // Category colors
             const categoryColors = {
@@ -1760,42 +1759,78 @@
 
         // Save photo info to localStorage
         function savePhotoToLocalStorage(photoData) {
-            let photos = JSON.parse(localStorage.getItem('cloudinaryPhotos') || '[]');
-            console.log('💾 Saving photo to localStorage:', photoData);
-            console.log('💾 Current photos count before save:', photos.length);
-            
-            // Check if photo already exists (for updates)
-            const existingIndex = photos.findIndex(p => p.public_id === photoData.public_id);
-            
-            if (existingIndex >= 0) {
-                // Update existing photo
-                photos[existingIndex] = { ...photos[existingIndex], ...photoData };
-                console.log('💾 Updated existing photo at index:', existingIndex);
-            } else {
-                // Add new photo with default values
-                photoData = {
-                    isMain: false,  // Default to not main
-                    title: photoData.title || photoData.category + ' Photo',
+            try {
+                // Ensure we have the required data
+                if (!photoData.public_id || !photoData.url) {
+                    console.error('❌ Invalid photo data:', photoData);
+                    return null;
+                }
+
+                // Get existing photos or initialize empty array
+                let photos = [];
+                try {
+                    const storedPhotos = localStorage.getItem('cloudinaryPhotos');
+                    photos = storedPhotos ? JSON.parse(storedPhotos) : [];
+                } catch (e) {
+                    console.error('❌ Error parsing stored photos:', e);
+                    photos = [];
+                }
+
+                console.log('💾 Current photos in localStorage:', photos.length);
+                
+                // Check if photo already exists (for updates)
+                const existingIndex = photos.findIndex(p => p.public_id === photoData.public_id);
+                
+                // Prepare photo data with defaults
+                const now = new Date().toISOString();
+                const photo = {
+                    id: photoData.id || Date.now().toString(),
+                    public_id: photoData.public_id,
+                    url: photoData.url,
+                    title: photoData.title || 'Untitled Photo',
                     description: photoData.description || '',
-                    ...photoData
+                    category: photoData.category || 'Uncategorized',
+                    isMain: photoData.isMain || false,
+                    uploaded_at: photoData.uploaded_at || now,
+                    width: photoData.width || 0,
+                    height: photoData.height || 0,
+                    format: photoData.format || 'jpg'
                 };
-                photos.unshift(photoData);
-                console.log('💾 Added new photo, total count:', photos.length);
+                
+                if (existingIndex >= 0) {
+                    // Update existing photo
+                    photos[existingIndex] = { ...photos[existingIndex], ...photo };
+                    console.log('💾 Updated existing photo at index:', existingIndex);
+                } else {
+                    // Add new photo
+                    photos.unshift(photo);
+                    console.log('💾 Added new photo, total count:', photos.length);
+                }
+                
+                // Ensure only one main photo per category
+                if (photo.isMain) {
+                    photos = photos.map(p => ({
+                        ...p,
+                        isMain: p.public_id === photo.public_id 
+                            ? true 
+                            : (p.category === photo.category ? false : p.isMain)
+                    }));
+                }
+                
+                // Save back to localStorage
+                localStorage.setItem('cloudinaryPhotos', JSON.stringify(photos));
+                console.log('✅ Photos saved to localStorage successfully');
+                console.log('📊 Total photos in localStorage:', photos.length);
+                
+                // Refresh the display
+                loadPortfolioPhotos();
+                return photo;
+                
+            } catch (error) {
+                console.error('❌ Error saving photo to localStorage:', error);
+                showAlert('Error saving photo. Please try again.', 'error', 'photoAlert');
+                return null;
             }
-            
-            // Ensure only one main photo per category
-            if (photoData.isMain) {
-                photos = photos.map(p => ({
-                    ...p,
-                    isMain: p.public_id === photoData.public_id ? true : 
-                           (p.category === photoData.category ? false : p.isMain)
-                }));
-            }
-            
-            localStorage.setItem('cloudinaryPhotos', JSON.stringify(photos));
-            console.log('💾 Photos saved to localStorage successfully');
-            console.log('💾 Total photos in localStorage:', photos.length);
-            return photoData; // Return the updated/created photo data
         }
 
         // Load photos from localStorage on page load
@@ -2030,7 +2065,17 @@
         
         // Load and display portfolio photos
         function loadPortfolioPhotos() {
-            const photos = JSON.parse(localStorage.getItem('cloudinaryPhotos') || '[]');
+            let photos = [];
+            try {
+                const storedPhotos = localStorage.getItem('cloudinaryPhotos');
+                photos = storedPhotos ? JSON.parse(storedPhotos) : [];
+                console.log('📸 Loaded photos from localStorage:', photos.length);
+            } catch (error) {
+                console.error('❌ Error loading photos from localStorage:', error);
+                showAlert('Error loading photos. Please refresh the page.', 'error', 'portfolioAlert');
+                return;
+            }
+            
             const featuredGrid = document.getElementById('featuredGrid');
             const portfolioGrid = document.getElementById('portfolioGrid');
             
@@ -2472,12 +2517,14 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Load photos when the page loads
+            loadPortfolioPhotos();
+            
             // Load category thumbnails
             loadCategoryThumbnails();
             // Load photos from localStorage
             loadPhotosFromLocalStorage();
             updatePhotoCount();
-            loadPortfolioPhotos(); // Load portfolio items
             
             // Load testimonials from Firebase
             loadTestimonialsFromFirebase();
