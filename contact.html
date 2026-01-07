@@ -243,8 +243,10 @@
         /* Hero Section */
         .hero {
             position: relative;
-            background: url('images/image1.jpg') center/cover no-repeat;
-            background-color: #f0f0f0; /* Fallback color */
+            background: url('https://images.unsplash.com/photo-1519741497674-61137153046e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat,
+                        url('https://picsum.photos/seed/photography-studio/1920/1080.jpg') center/cover no-repeat,
+                        url('https://images.unsplash.com/photo-1469371670807-013ccf47f584?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+            background-color: #2c3e50; /* Dark fallback color */
             color: white;
             text-align: center;
             padding: 120px 20px 80px;
@@ -254,6 +256,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 100vh; /* Full height for laptop */
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 50vh; /* Half height for phone */
+                padding: 80px 20px 40px;
+            }
         }
         
         .hero::before {
