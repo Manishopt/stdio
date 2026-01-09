@@ -8,6 +8,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_oBr_xQZZyFKBeMS9Vqa_IgiUUCofrQY",
+            authDomain: "studio-66a62.firebaseapp.com",
+            projectId: "studio-66a62",
+            storageBucket: "studio-66a62.firebasestorage.app",
+            messagingSenderId: "472272986177",
+            appId: "1:472272986177:web:96823be1a135b00bb466c0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -375,11 +397,25 @@
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
 
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
+            
+            // Rate limiting
+            const loginAttempts = parseInt(sessionStorage.getItem('loginAttempts') || '0');
+            const maxAttempts = 5;
+            const lockoutTime = 15 * 60 * 1000; // 15 minutes
+            
+            // Check if locked out
+            const lockoutEnd = sessionStorage.getItem('lockoutEnd');
+            if (lockoutEnd && Date.now() < parseInt(lockoutEnd)) {
+                const remainingTime = Math.ceil((parseInt(lockoutEnd) - Date.now()) / 60000);
+                errorMessage.style.display = 'block';
+                errorMessage.innerHTML = `<i class="fas fa-lock"></i> Account locked. Try again in ${remainingTime} minutes`;
+                return;
+            }
             
             // Validate that both fields are filled
             if (!username || !password) {
@@ -387,7 +423,6 @@
                 errorMessage.style.display = 'block';
                 errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please enter both username and password';
                 
-                // Shake animation
                 loginForm.style.animation = 'shake 0.5s';
                 setTimeout(() => {
                     loginForm.style.animation = '';
@@ -395,30 +430,97 @@
                 return;
             }
             
-            // Simple authentication (in production, this should be server-side)
-            // Default credentials: admin / admin123
-            if (username === 'admin' && password === 'admin123') {
-                errorMessage.style.display = 'none';
-                successMessage.style.display = 'block';
-                
-                // Store login status
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                
-                // Redirect to admin panel
-                setTimeout(() => {
-                    window.location.href = 'admin-panel.html';
-                }, 1500);
-            } else {
+            // Input validation
+            if (username.length < 3 || password.length < 6) {
                 successMessage.style.display = 'none';
                 errorMessage.style.display = 'block';
-                errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid username or password';
+                errorMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Username must be at least 3 characters and password at least 6 characters';
+                
+                loginForm.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    loginForm.style.animation = '';
+                }, 500);
+                return;
+            }
+            
+            // Async authentication function
+            const authenticateUser = async () => {
+                try {
+                    // Show loading state
+                    errorMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    successMessage.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+                    
+                    // Firebase Authentication
+                    if (username.includes('@')) {
+                        // Email format - use Firebase Auth directly
+                        await auth.signInWithEmailAndPassword(username, password);
+                    } else {
+                        // Username format - convert to email
+                        await auth.signInWithEmailAndPassword(`${username}@studio.com`, password);
+                    }
+                    
+                    // Successful login
+                    sessionStorage.removeItem('loginAttempts');
+                    sessionStorage.removeItem('lockoutEnd');
+                    
+                    errorMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Redirecting...';
+                    
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('loginTime', Date.now().toString());
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin-panel.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    throw error;
+                }
+            };
+            
+            // Execute authentication
+            authenticateUser().catch((error) => {
+                // Increment login attempts
+                const newAttempts = loginAttempts + 1;
+                sessionStorage.setItem('loginAttempts', newAttempts.toString());
+                
+                // Handle different error types
+                let errorMessageText = '';
+                switch(error.code) {
+                    case 'auth/user-not-found':
+                        errorMessageText = 'User not found. Check your email.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessageText = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessageText = 'Too many requests. Please try again later.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessageText = 'Account disabled. Contact administrator.';
+                        break;
+                    default:
+                        errorMessageText = `Authentication failed. ${newAttempts >= maxAttempts - 1 ? '0 attempts remaining.' : `${maxAttempts - newAttempts} attempts remaining.`}`;
+                }
+                
+                // Lock out after max attempts
+                if (newAttempts >= maxAttempts) {
+                    sessionStorage.setItem('lockoutEnd', (Date.now() + lockoutTime).toString());
+                    errorMessageText = 'Too many failed attempts. Account locked for 15 minutes';
+                }
+                
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+                errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessageText}`;
                 
                 // Shake animation
                 loginForm.style.animation = 'shake 0.5s';
                 setTimeout(() => {
                     loginForm.style.animation = '';
                 }, 500);
-            }
+            });
         });
 
         // Remember me functionality
