@@ -1900,17 +1900,14 @@
             background: var(--card-bg);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: none;
-            cursor: pointer;
-            border: none;
-            aspect-ratio: auto;
-            height: 200px;
+            cursor: default;
+            pointer-events: none;
         }
 
         .as-seen-on-item:hover {
             transform: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: none;
         }
 
         .as-seen-on-item img {
@@ -1918,8 +1915,7 @@
             height: 100%;
             object-fit: contain;
             transition: none;
-            background: var(--card-bg);
-            padding: 10px;
+            pointer-events: none;
         }
 
         .as-seen-on-item:hover img {
@@ -3031,8 +3027,12 @@ document.addEventListener('visibilitychange', function() {
                          grid.innerHTML = '';
                          
                          // Add photos to grid
-                                                                               
-                                              } else {
+                         photos.forEach((photo, index) => {
+                             const item = createAsSeenOnItem(photo, index);
+                             grid.appendChild(item);
+                         });
+                         
+                     } else {
                          // No photos found, show placeholder
                          showAsSeenOnPlaceholder();
                      }
@@ -3059,10 +3059,7 @@ document.addEventListener('visibilitychange', function() {
              
              item.appendChild(img);
              
-             // Add click handler to view full image
-             item.addEventListener('click', () => {
-                 window.open(photo.url, '_blank');
-             });
+             // No click handler - images are locked/non-interactive
              
              return item;
          }
