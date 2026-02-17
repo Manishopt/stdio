@@ -191,54 +191,7 @@
             z-index: -1;
         }
 
-        /* ===== LOADING SCREEN ===== */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-content {
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 182, 193, 0.3);
-            border-top: 3px solid #ffb6c1;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        /* ===== BACKGROUND PHOTO CAROUSEL ===== */
+/* ===== BACKGROUND PHOTO CAROUSEL ===== */
         #bg-carousel {
             position: fixed;
             top: 0;
@@ -275,8 +228,12 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
         }
 
-        /* Mobile-specific background carousel fix */
+        /* Mobile optimizations */
         @media (max-width: 768px) {
+            body:not(.loaded) #bg-carousel {
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            }
+            
             .bg-slide {
                 object-fit: cover;
                 object-position: center;
@@ -2382,14 +2339,7 @@
     -->
     <div id="video-overlay"></div>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">TJ Clicks Studio</div>
-        </div>
-    </div>
-
+    
     <!-- Navigation -->
     <nav>
         <div class="nav-logo">TJ Clicks</div>
@@ -2890,19 +2840,18 @@ async function loadBackgroundPhotos() {
         if (response.ok) {
             backgroundPhotos = await response.json();
             if (backgroundPhotos.length > 0) {
-                // Preload all images before initializing carousel
                 const imageUrls = backgroundPhotos.map(photo => photo.url);
                 await preloadImages(imageUrls);
                 initCarousel();
             } else {
-                await useDefaultBackgrounds();
+                useDefaultBackgrounds();
             }
         } else {
-            await useDefaultBackgrounds();
+            useDefaultBackgrounds();
         }
     } catch (error) {
         console.error('Error loading background photos:', error);
-        await useDefaultBackgrounds();
+        useDefaultBackgrounds();
     }
 }
 
@@ -2932,9 +2881,8 @@ function initCarousel() {
         carousel.appendChild(slide);
     });
     
-    // Mark body as loaded and hide loading screen
+    // Mark body as loaded
     document.body.classList.add('loaded');
-    hideLoadingScreen();
     
     // Start carousel after a brief delay to ensure first image is visible
     setTimeout(() => {
@@ -2971,9 +2919,8 @@ async function useDefaultBackgrounds() {
         carousel.appendChild(slide);
     });
     
-    // Mark body as loaded and hide loading screen
+    // Mark body as loaded
     document.body.classList.add('loaded');
-    hideLoadingScreen();
     
     // Start carousel after a brief delay
     setTimeout(() => {
@@ -3014,17 +2961,6 @@ function nextSlide() {
     }, 1500); // Match the CSS transition duration
 }
 
-function hideLoadingScreen() {
-    const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
-        loadingScreen.classList.add('hidden');
-        // Remove from DOM after transition
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }
-}
-
 function stopCarousel() {
     if (carouselInterval) {
         clearInterval(carouselInterval);
@@ -3033,23 +2969,7 @@ function stopCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize loading screen
-    const loadingScreen = document.getElementById('loading-screen');
-    if (!loadingScreen) {
-        // Create loading screen if it doesn't exist
-        const loadingDiv = document.createElement('div');
-        loadingDiv.id = 'loading-screen';
-        loadingDiv.className = 'loading-screen';
-        loadingDiv.innerHTML = `
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">TJ Clicks Studio</div>
-            </div>
-        `;
-        document.body.insertBefore(loadingDiv, document.body.firstChild);
-    }
-    
-    // Start loading background photos
+    // Start loading background photos immediately
     loadBackgroundPhotos();
 });
 
