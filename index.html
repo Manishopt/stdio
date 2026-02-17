@@ -191,6 +191,53 @@
             z-index: -1;
         }
 
+        /* ===== LOADING SCREEN ===== */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 182, 193, 0.3);
+            border-top: 3px solid #ffb6c1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
         /* ===== BACKGROUND PHOTO CAROUSEL ===== */
         #bg-carousel {
             position: fixed;
@@ -211,10 +258,21 @@
             object-fit: cover;
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
+            will-change: opacity;
         }
 
         .bg-slide.active {
             opacity: 1;
+        }
+
+        .bg-slide.preloading {
+            opacity: 0;
+            z-index: -3;
+        }
+
+        /* Prevent white flash during initial load */
+        body:not(.loaded) #bg-carousel {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
         }
 
         /* Mobile-specific background carousel fix */
@@ -366,6 +424,7 @@
             color: var(--text-light);
             text-align: center;
             position: relative;
+            z-index: 10;
         }
         
         [data-theme="dark"] header {
@@ -374,7 +433,7 @@
 
         header h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 700;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -382,25 +441,30 @@
             animation: fadeInDown 1s ease;
             transition: var(--transition);
             cursor: default;
+            text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.7);
         }
 
         header h1:hover {
             transform: scale(1.05);
-            text-shadow: 0 0 20px rgba(255,182,193,0.6); /* pink shadow */
+            text-shadow: 0 0 30px rgba(255,182,193,0.8), 2px 2px 20px rgba(0, 0, 0, 0.8);
             color: var(--primary-color);
         }
 
         header p {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
             font-style: italic;
             animation: fadeInUp 1s ease 0.3s both;
             transition: var(--transition);
             cursor: default;
+            text-shadow: 1px 1px 15px rgba(0, 0, 0, 0.7);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         header p:hover {
             transform: scale(1.03);
-            text-shadow: 0 0 15px rgba(255,182,193,0.5); /* pink shadow */
+            text-shadow: 0 0 25px rgba(255,182,193,0.7), 1px 1px 15px rgba(0, 0, 0, 0.8);
             color: var(--primary-color);
         }
 
@@ -2318,6 +2382,14 @@
     -->
     <div id="video-overlay"></div>
 
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">TJ Clicks Studio</div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-logo">TJ Clicks</div>
@@ -2773,6 +2845,36 @@
 let currentSlide = 0;
 let backgroundPhotos = [];
 let carouselInterval;
+let isTransitioning = false;
+let preloadedImages = new Set();
+
+// Preload image function
+function preloadImage(src) {
+    return new Promise((resolve, reject) => {
+        if (preloadedImages.has(src)) {
+            resolve();
+            return;
+        }
+        
+        const img = new Image();
+        img.onload = () => {
+            preloadedImages.add(src);
+            resolve();
+        };
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+// Preload multiple images
+async function preloadImages(urls) {
+    const promises = urls.map(url => preloadImage(url));
+    try {
+        await Promise.all(promises);
+    } catch (error) {
+        console.warn('Some images failed to preload:', error);
+    }
+}
 
 async function loadBackgroundPhotos() {
     try {
@@ -2788,16 +2890,19 @@ async function loadBackgroundPhotos() {
         if (response.ok) {
             backgroundPhotos = await response.json();
             if (backgroundPhotos.length > 0) {
+                // Preload all images before initializing carousel
+                const imageUrls = backgroundPhotos.map(photo => photo.url);
+                await preloadImages(imageUrls);
                 initCarousel();
             } else {
-                useDefaultBackgrounds();
+                await useDefaultBackgrounds();
             }
         } else {
-            useDefaultBackgrounds();
+            await useDefaultBackgrounds();
         }
     } catch (error) {
         console.error('Error loading background photos:', error);
-        useDefaultBackgrounds();
+        await useDefaultBackgrounds();
     }
 }
 
@@ -2812,18 +2917,32 @@ function initCarousel() {
         return;
     }
     
+    // Create all slide elements
     backgroundPhotos.forEach((photo, index) => {
         const slide = document.createElement('img');
         slide.src = photo.url;
         slide.className = 'bg-slide';
-        if (index === 0) slide.classList.add('active');
+        slide.alt = `Background slide ${index + 1}`;
+        
+        // Set first slide as active immediately
+        if (index === 0) {
+            slide.classList.add('active');
+        }
+        
         carousel.appendChild(slide);
     });
     
-    startCarousel();
+    // Mark body as loaded and hide loading screen
+    document.body.classList.add('loaded');
+    hideLoadingScreen();
+    
+    // Start carousel after a brief delay to ensure first image is visible
+    setTimeout(() => {
+        startCarousel();
+    }, 100);
 }
 
-function useDefaultBackgrounds() {
+async function useDefaultBackgrounds() {
     const carousel = document.getElementById('bg-carousel');
     if (!carousel) return;
     
@@ -2835,15 +2954,31 @@ function useDefaultBackgrounds() {
         'https://images.unsplash.com/photo-1469371670807-013ccf47f584?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'
     ];
     
+    // Preload default images
+    await preloadImages(defaultPhotos);
+    
     defaultPhotos.forEach((url, index) => {
         const slide = document.createElement('img');
         slide.src = url;
         slide.className = 'bg-slide';
-        if (index === 0) slide.classList.add('active');
+        slide.alt = `Default background slide ${index + 1}`;
+        
+        // Set first slide as active immediately
+        if (index === 0) {
+            slide.classList.add('active');
+        }
+        
         carousel.appendChild(slide);
     });
     
-    startCarousel();
+    // Mark body as loaded and hide loading screen
+    document.body.classList.add('loaded');
+    hideLoadingScreen();
+    
+    // Start carousel after a brief delay
+    setTimeout(() => {
+        startCarousel();
+    }, 100);
 }
 
 function startCarousel() {
@@ -2857,12 +2992,37 @@ function startCarousel() {
 }
 
 function nextSlide() {
+    if (isTransitioning) return;
+    
     const slides = document.querySelectorAll('.bg-slide');
     if (slides.length === 0) return;
     
+    isTransitioning = true;
+    
+    // Remove active class from current slide
     slides[currentSlide].classList.remove('active');
+    
+    // Move to next slide
     currentSlide = (currentSlide + 1) % slides.length;
+    
+    // Add active class to next slide
     slides[currentSlide].classList.add('active');
+    
+    // Reset transition flag after transition completes
+    setTimeout(() => {
+        isTransitioning = false;
+    }, 1500); // Match the CSS transition duration
+}
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        // Remove from DOM after transition
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }
 }
 
 function stopCarousel() {
@@ -2873,6 +3033,23 @@ function stopCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize loading screen
+    const loadingScreen = document.getElementById('loading-screen');
+    if (!loadingScreen) {
+        // Create loading screen if it doesn't exist
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading-screen';
+        loadingDiv.className = 'loading-screen';
+        loadingDiv.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">TJ Clicks Studio</div>
+            </div>
+        `;
+        document.body.insertBefore(loadingDiv, document.body.firstChild);
+    }
+    
+    // Start loading background photos
     loadBackgroundPhotos();
 });
 
@@ -3604,19 +3781,6 @@ document.addEventListener('visibilitychange', function() {
             
             // Apply the saved theme
             updateTheme(savedTheme);
-            
-            // Toggle theme on button click (both desktop and mobile)
-            function setupThemeToggle(button) {
-                if (!button) return;
-                
-                button.addEventListener('click', function() {
-                    const currentTheme = document.documentElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    updateTheme(newTheme);
-                });
-            }
-            
-            // Set up theme toggle
             setupThemeToggle(themeToggle);
             
             // Listen for system theme changes (only if user hasn't set a preference)
